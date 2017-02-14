@@ -16,17 +16,17 @@ suffer_score_coeffs = {
 }
 
 hr_zones = { 
-    "0": (0, 126),
-    "1": (126, 143),
-    "2": (143, 159),
-    "3": (159, 175),
-    "4": (175, 191),
-    "5": (191, 209)
+    "0": (0, 95),
+    "1": (95, 113),
+    "2": (113, 132),
+    "3": (132, 151),
+    "4": (151, 170),
+    "5": (170, 209)
 }
 
 def get_hr_zone(hr):
     for zone,bounds in hr_zones.items():
-        if hr >= bounds[0] and hr < bounds[1]:
+        if hr > bounds[0] and hr <= bounds[1]:
             return zone
 
 if __name__ == "__main__":
@@ -50,7 +50,10 @@ if __name__ == "__main__":
                 prevstamp = timestamp
 
             score = 0
+            total_secs = 0
             for zone, secs in zone_time.items():
                 score += suffer_score_coeffs[zone]*secs/3600.0
+                total_secs += secs
+            norm_score = score*100/float(total_secs)
 
-            print "Activity: %s Suffer Score: %s Time: %s" % (name,int(score), datetime.timedelta(seconds=sum(zone_time.values())))
+            print "Activity: %s Suffer Score: %s Norm Score: %.2f Time: %s" % (name,int(score), norm_score, datetime.timedelta(seconds=total_secs))
